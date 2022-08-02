@@ -12,7 +12,7 @@ type IUser = IBase & {
   lastName?: string;
   avatar?: string;
   avatarURL?: string;
-  roles?: USER_ROLE;
+  role?: USER_ROLE;
 };
 
 export default IUser;

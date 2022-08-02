@@ -11,8 +11,10 @@ import { COLORS } from '../../constants/colors';
 import CollectionTypeModal from '../../components/CollectionTypeModal';
 import { COLLECTION } from '../../configs/server';
 import AuthorizedAPI from '../../apis/authorized';
+import IUser, { USER_ROLE } from '../../types/IUser';
 
 const CollectionType: React.FC = () => {
+  const user = useSelector<{user: IUser}, IUser>((state) => state.user);
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
   const { collectionName } = useParams();
@@ -120,6 +122,7 @@ const CollectionType: React.FC = () => {
       render: (data: any) => (
         <div className="flex justify-end">
           <Button
+            hidden={!(user.role === USER_ROLE.ADMIN || (user.role === USER_ROLE.AUTHOR && user.id === data.createdBy))}
             disabled={requesting}
             loading={requesting}
             onClick={() => handlePublishEntity(data, !data.publishedAt)}
@@ -128,6 +131,7 @@ const CollectionType: React.FC = () => {
             type="text"
           />
           <Button
+            hidden={!(user.role === USER_ROLE.ADMIN || (user.role === USER_ROLE.AUTHOR && user.id === data.createdBy))}
             disabled={requesting}
             loading={requesting}
             onClick={() => handleEditEntityPress(data)}
@@ -136,6 +140,7 @@ const CollectionType: React.FC = () => {
             type="text"
           />
           <Button
+            hidden={!(user.role === USER_ROLE.ADMIN || (user.role === USER_ROLE.AUTHOR && user.id === data.createdBy))}
             disabled={requesting}
             loading={requesting}
             onClick={() => handleDeleteEntity(data)}
@@ -166,6 +171,7 @@ const CollectionType: React.FC = () => {
                 style={{ color: COLORS.blackText }}
               >{`${pagination.total} Entries Found`}</div>
               <Button
+                hidden={user.role !== USER_ROLE.ADMIN && user.role !== USER_ROLE.AUTHOR}
                 className="text-xl"
                 style={{ color: COLORS.blueText }}
                 type="text"
