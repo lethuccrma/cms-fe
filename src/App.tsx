@@ -13,6 +13,7 @@ import { useDispatch } from 'react-redux';
 import { FETCH_USER } from './redux/user/user.saga';
 import Home from './pages/Home';
 import CollectionType from './pages/CollectionType';
+import ContentType from './pages/ContentType';
 
 function Router() {
   const navigate = useNavigate();
@@ -31,6 +32,8 @@ function Router() {
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/collection-type/:collectionName" element={<CollectionType />} />
+      <Route path="/content-type" element={<ContentType />} />
+      <Route path="/content-type/:collectionName" element={<ContentType />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/user" element={<User />} />

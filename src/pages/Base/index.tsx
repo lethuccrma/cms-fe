@@ -11,7 +11,7 @@ import { COLORS } from '../../constants/colors';
 import { useNavigate } from 'react-router-dom';
 import { LOGOUT } from '../../redux/auth/auth.saga';
 
-const { Header, Content, Footer, Sider } = Layout;
+const { Header, Content, Sider } = Layout;
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -51,7 +51,7 @@ const Base: React.FC<{ headerTitle?: string, defaultSelectedKey?: string, childr
 
   const handleTabNavClick = (e: any) => {
     if(e.key === 'contentTypeBuilder') {
-      navigate('/content-type-builder');
+      navigate('/content-type');
     } else if(e.key === 'userProfile') {
       navigate('/user');
     } else if(e.key === 'logout') {
@@ -96,12 +96,9 @@ const Base: React.FC<{ headerTitle?: string, defaultSelectedKey?: string, childr
           >
             {headerTitle || ''}
           </Header>
-          <Content style={{ margin: '0 16px' }}>
+          <Content>
             {children}
           </Content>
-          <Footer style={{ textAlign: 'center' }}>
-            CMS+ ©2022 Created by Thuc Le
-          </Footer>
         </Layout>
       </Layout>
     </BaseStyled>
