@@ -1,4 +1,4 @@
-import { Button, Col, Form, Input, Row, Space, Typography } from 'antd';
+import { Button, Col, Form, Input, Row, Select, Space, Typography } from 'antd';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
@@ -8,6 +8,9 @@ import { SIGNUP } from '../../configs/server';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { AuthState } from '../../redux/auth/auth.slice';
+import { USER_ROLE } from '../../types/IUser';
+
+const {Option} = Select;
 
 export default function index() {
   const [form] = Form.useForm();
@@ -37,9 +40,9 @@ export default function index() {
 
   const navigate = useNavigate();
   const onFinish = (values: any) => {
-    const { email, password, firstName, lastName } = values;
+    const { email, password, firstName, lastName, role } = values;
     setOnLoading(true);
-    UnauthorizedAPI.post(SIGNUP, { email, password, firstName, lastName })
+    UnauthorizedAPI.post(SIGNUP, { email, password, firstName, lastName, role })
       .then((res) => {
         setErrorText('');
         navigate('/login');
@@ -96,6 +99,25 @@ export default function index() {
               ]}
             >
               <Input placeholder="Email" />
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row gutter={24}>
+          <Col span={24}>
+            <Form.Item
+              name="role"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please select role',
+                },
+              ]}
+            >
+              <Select>
+                <Option value={USER_ROLE.ADMIN}>Admin</Option>
+                <Option value={USER_ROLE.AUTHOR}>Author</Option>
+                <Option value={USER_ROLE.EDITOR}>Editor</Option>
+              </Select>
             </Form.Item>
           </Col>
         </Row>
