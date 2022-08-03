@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Checkbox, Form, Input, Typography } from 'antd';
+import { Button, Form, Input, Typography } from 'antd';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import AuthSlice, { AuthState } from '../../redux/auth/auth.slice';
 import { LoginRequest } from '../../types/Axios';
-import AuthSaga from '../../redux/auth/auth.saga';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 
-import './index.css';
-import { stringify } from 'querystring';
 import { useNavigate } from 'react-router-dom';
+import { LoginStyled } from './styled';
 
 export default function index() {
   const [showError, setShowError] = useState(false);
@@ -40,67 +38,73 @@ export default function index() {
   }, [authState.authenticated]);
 
   return (
-    <div className="flex h-screen w-screen justify-center	 items-center">
-      <Form
-        name="normal_login"
-        className="login-form min-w-[25%]"
-        onFinish={onFinish}
-      >
-        <Typography>Your email:</Typography>
-        <Form.Item
-          name="email"
-          rules={[{ required: true, message: 'Please input your email!' }]}
+    <LoginStyled className="flex h-screen w-screen">
+      <div className='left-side-container overflow-hidden'>
+        <div className='poster-img-container'>
+          <div className='banner-txt-container'>
+            <div>Design APIs fast</div>
+            <div className='mt-2'>Manage content easily.</div>
+          </div>
+          <img className='poster-img' src='/poster-image.png'/>
+        </div>
+        <div className='large-oval absolute' style={{top: 20, right: 20}} />
+        <div className='small-oval absolute' style={{top: 200, right: 200}} />
+        <div className='large-oval absolute' style={{left: 0, bottom: 50}} />
+        <div className='small-oval absolute' style={{left: 200, bottom: -50}} />
+      </div>
+      <div className='right-side-container'>
+        <div className='login-title'>Login to your CMS+ account</div>
+        <Form
+          name="normal_login"
+          className="login-form"
+          onFinish={onFinish}
         >
-          <Input
-            prefix={<UserOutlined className="site-form-item-icon" />}
-            type="email"
-            placeholder="example@gmail.com"
-          />
-        </Form.Item>
-        <Typography>Your password:</Typography>
-        <Form.Item
-          name="password"
-          rules={[
-            { required: true, message: 'Please input your password!' },
-            { type: 'string', min: 6 },
-          ]}
-        >
-          <Input
-            prefix={<LockOutlined className="site-form-item-icon" />}
-            type="password"
-            placeholder="Password"
-          />
-        </Form.Item>
-
-        {/* <Form.Item>
-          <Form.Item name="remember" valuePropName="checked" noStyle>
-            <Checkbox>Remember me</Checkbox>
-          </Form.Item>
-
-          <a className="login-form-forgot" href="">
-            Forgot password
-          </a>
-        </Form.Item> */}
-        {showError ? (
-          <Typography style={{ color: 'red', marginBottom: 10 }}>
-            {authState.loginError}
-          </Typography>
-        ) : (
-          <div></div>
-        )}
-
-        <Form.Item>
-          <Button
-            type="primary"
-            htmlType="submit"
-            className="login-form-button"
-            loading={authState.loginPending}
+          <Typography className='input-label'>Your email:</Typography>
+          <Form.Item
+            name="email"
+            rules={[{ required: true, message: 'Please input your email!' }]}
           >
-            Log in
-          </Button>
-          Or <a href="/signup">register now!</a>
-        </Form.Item>
-      </Form>
-    </div>
+            <Input
+              prefix={<UserOutlined className="site-form-item-icon" />}
+              type="email"
+              placeholder="example@gmail.com"
+            />
+          </Form.Item>
+          <Typography className='input-label'>Your password:</Typography>
+          <Form.Item
+            name="password"
+            rules={[
+              { required: true, message: 'Please input your password!' },
+              { type: 'string', min: 6 },
+            ]}
+          >
+            <Input
+              prefix={<LockOutlined className="site-form-item-icon" />}
+              type="password"
+              placeholder="Password"
+            />
+          </Form.Item>
+          {showError ? (
+            <Typography style={{ color: 'red', marginBottom: 10 }}>
+              {authState.loginError}
+            </Typography>
+          ) : (
+            <div></div>
+          )}
+
+          <Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              className="login-form-button"
+              loading={authState.loginPending}
+            >
+              Log in
+            </Button>
+          </Form.Item>
+        </Form>
+        <a className='register-link' href="/signup">Register now</a>
+      </div>
+    </LoginStyled>
   );
 }
