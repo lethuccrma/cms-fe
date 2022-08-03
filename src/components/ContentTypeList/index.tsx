@@ -1,18 +1,48 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ContentTypeListStyled } from './styled';
 import { useSelector } from 'react-redux';
 import { ICollection } from '../../types/ICollection';
 import { Button } from 'antd';
 import { COLORS } from '../../constants/colors';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import AddCollectionModal from '../AddCollectionModal';
+import AuthorizedAPI from '../../apis/authorized';
+import { COLLECTION } from '../../configs/server';
+import { useDispatch } from 'react-redux';
+import { FETCH_COLLECTIONS } from '../../redux/collection/collection.saga';
 
-const ContentTypeList: React.FC<{ selectedCollection?: string }> = ({
-  selectedCollection,
-}) => {
+const ContentTypeList: React.FC = () => {
+  const { collectionName: selectedCollection } = useParams();
   const collections = useSelector<{ collection: ICollection[] }, ICollection[]>(
     (state) => state.collection,
   );
   const navigate = useNavigate();
+  const [requesting, setRequesting] = useState(false);
+  const [error, setError] = useState('');
+  const [addCollectionVisible, setAddCollectionVisible] = useState(false);
+  const dispatch = useDispatch();
+
+  const handleAddCollection = ({
+    collectionName,
+  }: {
+    collectionName: string;
+  }) => {
+    setRequesting(true);
+    setError('');
+    AuthorizedAPI.post(`${COLLECTION}`, {
+      collectionName,
+      attributes: {},
+    })
+      .then(() => {
+        setAddCollectionVisible(false);
+        dispatch(FETCH_COLLECTIONS());
+        navigate(`/content-type/${collectionName}`);
+      })
+      .catch((err) => setError(err.response?.data?.message || err.message))
+      .finally(() => {
+        setRequesting(false);
+      });
+  };
 
   return (
     <ContentTypeListStyled>
@@ -26,6 +56,7 @@ const ContentTypeList: React.FC<{ selectedCollection?: string }> = ({
           borderColor: COLORS.strongPurple,
           background: 'rgba(255,255,255,0.5)',
         }}
+        onClick={() => setAddCollectionVisible(true)}
       >
         + New Type
       </Button>
@@ -45,12 +76,20 @@ const ContentTypeList: React.FC<{ selectedCollection?: string }> = ({
           }
           onClick={() => navigate(`/content-type/${c.collectionName}`)}
         >
-          <div className='flex justify-between'>
+          <div className="flex justify-between">
             <div>{c.collectionName}</div>
             <div>{Object.keys(c.attributes || {}).length}</div>
           </div>
         </Button>
       ))}
+      <AddCollectionModal
+        onSubmit={handleAddCollection}
+        onClose={() => setAddCollectionVisible(false)}
+        modalVisible={addCollectionVisible}
+        header="Add Type"
+        loading={requesting}
+        error={error}
+      />
     </ContentTypeListStyled>
   );
 };

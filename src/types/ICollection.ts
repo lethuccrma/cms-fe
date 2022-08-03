@@ -6,12 +6,14 @@ export enum DATA_TYPE {
   FILE = 'FILE',
 }
 
+export type IAttribute = {
+  type: DATA_TYPE;
+  displayName?: string;
+}
+
 export type ICollection = {
   collectionName?: string;
   attributes?: {
-    [key: string]: {
-      type: DATA_TYPE;
-      displayName?: string;
-    };
+    [key: string]: IAttribute;
   };
 };
